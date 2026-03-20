@@ -1,15 +1,253 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dynamic Game</title>
-    <style>body { background: #000; color: #fff; text-align: center; }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joker Fortune Wheel</title>
+
+<style>
+body{
+    margin:0;padding:0;
+    background: radial-gradient(circle,#2b0101 0%,#000 100%);
+    font-family:'Arial Black',sans-serif;
+    display:flex;justify-content:center;align-items:center;
+    height:100vh;overflow:hidden;color:#fff;
+}
+
+/* Flash Effect */
+.flash{
+    animation:flashAnim .4s ease;
+}
+@keyframes flashAnim{
+    0%{background:#fff;}
+    100%{background: radial-gradient(circle,#2b0101 0%,#000 100%);}
+}
+
+.container{
+    width:100%;max-width:400px;
+    text-align:center;position:relative;
+}
+
+.header{
+    font-size:24px;font-weight:bold;
+    color:#ffcc00;text-shadow:0 0 15px #ff0000;
+    margin-bottom:15px;
+}
+
+.wheel-box{
+    position:relative;width:320px;height:320px;margin:auto;
+}
+
+.wheel-canvas{
+    width:100%;height:100%;border-radius:50%;
+    border:8px solid #ffd700;
+    box-shadow:0 0 40px #ff4500;
+    transition: transform 4s cubic-bezier(.17,.67,.12,1.2);
+}
+
+.pointer{
+    position:absolute;top:-10px;left:50%;
+    transform:translateX(-50%);
+    width:30px;height:40px;
+    background:#ffff00;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    z-index:10;
+    filter:drop-shadow(0 0 5px black);
+}
+
+.balance-box{
+    margin-top:15px;font-size:20px;
+    background: rgba(0,0,0,.6);
+    padding:10px 20px;
+    border-radius:20px;border:1px solid #ffd700;
+}
+
+.spin-btn{
+    margin-top:20px;padding:15px 40px;font-size:22px;
+    font-weight:bold;color:#fff;
+    background: linear-gradient(to bottom,#ff0000,#990000);
+    border:none;border-radius:50px;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(255,0,0,.6);
+    animation:pulse 1.5s infinite;
+}
+.spin-btn:disabled{background:#555;animation:none;cursor:default;}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.07);}
+    100%{transform:scale(1);}
+}
+
+/* MONEY RAIN */
+.money{
+    position:fixed;
+    top:-30px;
+    font-size:22px;
+    pointer-events:none;
+    animation:fall linear forwards;
+}
+@keyframes fall{
+    0%{transform:translateY(0) rotate(0deg);opacity:1;}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+}
+
+.disclaimer{
+    font-size:10px;color:#888;margin-top:15px;
+}
+
+/* END CARD */
+.overlay{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,.92);
+    display:none;flex-direction:column;
+    justify-content:center;align-items:center;
+    z-index:100;
+}
+.overlay h1{color:#ffd700;font-size:42px;margin:0;}
+.overlay h2{font-size:28px;margin:15px 0;}
+</style>
 </head>
+
 <body>
-    <h1>Ձեր խաղը</h1>
-    <img id="gameImg" src="" style="width:300px; border: 5px solid gold;">
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('gameImg').src = urlParams.get('image');
-    </script>
+
+<div class="container">
+    <div class="header">JOKER STOKER SPECIAL</div>
+
+    <div class="wheel-box">
+        <div class="pointer"></div>
+        <canvas id="wheel" class="wheel-canvas" width="400" height="400"></canvas>
+    </div>
+
+    <div class="balance-box">Total Win: <span id="balance">CA$0</span></div>
+
+    <button id="spinBtn" class="spin-btn" onclick="spinWheel()">TAP TO SPIN</button>
+
+    <div class="disclaimer">18+ | Play Responsibly | Canada Only</div>
+</div>
+
+<div id="endCard" class="overlay">
+    <h1>JACKPOT!</h1>
+    <h2 id="finalPrize">CA$1,000 + 300 FREE SPINS</h2>
+    <button class="spin-btn" onclick="ctaClick()">PLAY NOW</button>
+</div>
+
+<!-- Sounds -->
+<audio id="spinSound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+<audio id="jackpotSound" src="https://assets.mixkit.co/active_storage/sfx/2769/2769-preview.mp3"></audio>
+
+<script>
+const canvas=document.getElementById('wheel');
+const ctx=canvas.getContext('2d');
+const prizes=["CA$200","LOSE","CA$800","JOKER","300 FS","BONUS","CA$50","FREE"];
+const colors=["#ff0000","#000","#cc0000","#333","#ff0000","#000","#cc0000","#333"];
+
+let spinCount=0;
+let totalWin=0;
+let currentRotation=0;
+
+function drawWheel(){
+    const slice=(2*Math.PI)/prizes.length;
+    for(let i=0;i<prizes.length;i++){
+        ctx.beginPath();
+        ctx.fillStyle=colors[i];
+        ctx.moveTo(200,200);
+        ctx.arc(200,200,200,i*slice,(i+1)*slice);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(200,200);
+        ctx.rotate(i*slice + slice/2);
+        ctx.fillStyle="#fff";
+        ctx.font="bold 20px Arial";
+        ctx.fillText(prizes[i], 80,10);
+        ctx.restore();
+    }
+}
+
+function animateCounter(start,end){
+    let current=start;
+    const step=Math.ceil((end-start)/40);
+    const interval=setInterval(()=>{
+        current+=step;
+        if(current>=end){
+            current=end;
+            clearInterval(interval);
+            document.body.classList.add('flash');
+            setTimeout(()=>document.body.classList.remove('flash'),300);
+        }
+        document.getElementById('balance').innerText=`CA$${current}`;
+    },30);
+}
+
+function spawnMoney(power){
+    const count=Math.min(150,power/5);
+    for(let i=0;i<count;i++){
+        const el=document.createElement('div');
+        el.className="money";
+        el.innerText="💰";
+        el.style.left=Math.random()*100+"%";
+        el.style.fontSize=(Math.random()*25+15)+"px";
+        el.style.animationDuration=(Math.random()*1.5+1)+"s";
+        el.style.color= i%2===0 ? "#ffd700" : "#00ff99";
+        el.style.textShadow="0 0 10px gold";
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),2000);
+    }
+}
+
+function spinWheel(){
+    const btn=document.getElementById('spinBtn');
+    const spinSound=document.getElementById('spinSound');
+    const winSound=document.getElementById('winSound');
+    const jackpotSound=document.getElementById('jackpotSound');
+
+    btn.disabled=true;
+    spinCount++;
+
+    spinSound.currentTime=0;
+    spinSound.play();
+
+    let target=0;
+    if(spinCount===1) target=3600;
+    else if(spinCount===2) target=7200+270;
+    else if(spinCount===3) target=10800+180;
+
+    currentRotation=target;
+    canvas.style.transform=`rotate(${currentRotation}deg)`;
+
+    setTimeout(()=>{
+        if(spinCount===1){
+            animateCounter(totalWin,totalWin+200);
+            totalWin+=200;
+            spawnMoney(400);
+            winSound.play();
+            btn.disabled=false;
+        }
+        else if(spinCount===2){
+            animateCounter(totalWin,totalWin+800);
+            totalWin+=800;
+            spawnMoney(800);
+            winSound.play();
+            btn.disabled=false;
+        }
+        else if(spinCount===3){
+            spawnMoney(3000);
+            jackpotSound.play();
+            document.getElementById('endCard').style.display="flex";
+        }
+    },4000);
+}
+
+function ctaClick(){
+    window.open("https://your-tracking-link.com","_blank");
+}
+
+drawWheel();
+</script>
+
 </body>
 </html>
