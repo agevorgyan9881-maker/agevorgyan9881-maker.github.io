@@ -1,253 +1,183 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hy">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joker Fortune Wheel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VERDE CASINO 🎃 It's Time for Some Magic</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial Black', 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0a1f0a, #001a00, #0d001a);
+      color: #fff;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+    }
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80') center/cover no-repeat; /* կարող ես փոխել ավելի spooky անտառի URL-ով */
+      opacity: 0.4;
+      z-index: 1;
+    }
+    .content {
+      position: relative;
+      z-index: 3;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-size: 5rem;
+      color: #00ff00;
+      text-shadow: 0 0 20px #00ff00, 0 0 40px #008800;
+      margin: 0.5em 0;
+      animation: glowGreen 4s infinite alternate;
+    }
+    h1 {
+      font-size: 4rem;
+      margin: 0.3em 0;
+      text-shadow: 0 0 30px #ffff00, 0 0 60px #ff8800;
+    }
+    h2 {
+      font-size: 3rem;
+      color: #ffff00;
+      text-shadow: 0 0 20px #ffff00;
+      margin: 0.5em 0;
+    }
+    .cauldrons {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin: 3em 0;
+      flex-wrap: wrap;
+    }
+    .cauldron {
+      width: 220px;
+      position: relative;
+      animation: float 6s infinite ease-in-out;
+    }
+    .cauldron::before {
+      content: "🪄";
+      font-size: 12rem;
+      display: block;
+      filter: drop-shadow(0 0 30px #00ff00);
+    }
+    .cauldron .glow {
+      position: absolute;
+      top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, #00ff88 20%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: bubble 3s infinite;
+    }
+    .cauldron .label {
+      position: absolute;
+      bottom: -40px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1.4rem;
+      color: #00ffaa;
+      border: 2px solid #00ff00;
+      box-shadow: 0 0 15px #00ff00;
+    }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff00aa, #aa00ff, #00ffaa);
+      color: white;
+      font-size: 2.2rem;
+      padding: 20px 80px;
+      border-radius: 60px;
+      text-decoration: none;
+      margin: 3em 0 1em;
+      box-shadow: 0 15px 40px rgba(0,255,170,0.7);
+      transition: all 0.4s;
+    }
+    .btn:hover {
+      transform: scale(1.1) rotate(2deg);
+      box-shadow: 0 25px 60px rgba(0,255,0,0.9);
+    }
+    .bats {
+      position: absolute;
+      font-size: 6rem;
+      opacity: 0.6;
+      z-index: 2;
+      animation: fly 20s infinite linear;
+    }
+    .bat1 { top: 10%; left: 10%; }
+    .bat2 { top: 20%; right: 15%; animation-delay: 5s; }
+    .pumpkin {
+      position: absolute;
+      font-size: 8rem;
+      opacity: 0.5;
+      z-index: 2;
+      animation: glow 5s infinite alternate;
+    }
+    .pumpkin1 { bottom: 15%; left: 8%; }
+    .pumpkin2 { bottom: 25%; right: 10%; }
 
-<style>
-body{
-    margin:0;padding:0;
-    background: radial-gradient(circle,#2b0101 0%,#000 100%);
-    font-family:'Arial Black',sans-serif;
-    display:flex;justify-content:center;align-items:center;
-    height:100vh;overflow:hidden;color:#fff;
-}
+    @keyframes glowGreen { from { text-shadow: 0 0 10px #00ff00; } to { text-shadow: 0 0 40px #00ff88, 0 0 80px #008800; } }
+    @keyframes glow { from { text-shadow: 0 0 10px #ffff00; } to { text-shadow: 0 0 40px #ffff88; } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+    @keyframes bubble { 0% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.3); opacity: 0.4; } 100% { transform: scale(1); opacity: 0.7; } }
+    @keyframes fly { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(200vw, -100vh) rotate(720deg); } }
 
-/* Flash Effect */
-.flash{
-    animation:flashAnim .4s ease;
-}
-@keyframes flashAnim{
-    0%{background:#fff;}
-    100%{background: radial-gradient(circle,#2b0101 0%,#000 100%);}
-}
-
-.container{
-    width:100%;max-width:400px;
-    text-align:center;position:relative;
-}
-
-.header{
-    font-size:24px;font-weight:bold;
-    color:#ffcc00;text-shadow:0 0 15px #ff0000;
-    margin-bottom:15px;
-}
-
-.wheel-box{
-    position:relative;width:320px;height:320px;margin:auto;
-}
-
-.wheel-canvas{
-    width:100%;height:100%;border-radius:50%;
-    border:8px solid #ffd700;
-    box-shadow:0 0 40px #ff4500;
-    transition: transform 4s cubic-bezier(.17,.67,.12,1.2);
-}
-
-.pointer{
-    position:absolute;top:-10px;left:50%;
-    transform:translateX(-50%);
-    width:30px;height:40px;
-    background:#ffff00;
-    clip-path: polygon(50% 100%, 0 0, 100% 0);
-    z-index:10;
-    filter:drop-shadow(0 0 5px black);
-}
-
-.balance-box{
-    margin-top:15px;font-size:20px;
-    background: rgba(0,0,0,.6);
-    padding:10px 20px;
-    border-radius:20px;border:1px solid #ffd700;
-}
-
-.spin-btn{
-    margin-top:20px;padding:15px 40px;font-size:22px;
-    font-weight:bold;color:#fff;
-    background: linear-gradient(to bottom,#ff0000,#990000);
-    border:none;border-radius:50px;
-    cursor:pointer;
-    box-shadow:0 5px 20px rgba(255,0,0,.6);
-    animation:pulse 1.5s infinite;
-}
-.spin-btn:disabled{background:#555;animation:none;cursor:default;}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.07);}
-    100%{transform:scale(1);}
-}
-
-/* MONEY RAIN */
-.money{
-    position:fixed;
-    top:-30px;
-    font-size:22px;
-    pointer-events:none;
-    animation:fall linear forwards;
-}
-@keyframes fall{
-    0%{transform:translateY(0) rotate(0deg);opacity:1;}
-    100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
-}
-
-.disclaimer{
-    font-size:10px;color:#888;margin-top:15px;
-}
-
-/* END CARD */
-.overlay{
-    position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,.92);
-    display:none;flex-direction:column;
-    justify-content:center;align-items:center;
-    z-index:100;
-}
-.overlay h1{color:#ffd700;font-size:42px;margin:0;}
-.overlay h2{font-size:28px;margin:15px 0;}
-</style>
+    .lang { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; color: #ccc; }
+    .lang select { background: #000; color: #0f0; border: 1px solid #0f0; padding: 8px; }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
-    <div class="header">JOKER STOKER SPECIAL</div>
+  <div class="overlay"></div>
 
-    <div class="wheel-box">
-        <div class="pointer"></div>
-        <canvas id="wheel" class="wheel-canvas" width="400" height="400"></canvas>
+  <div class="lang">
+    <select>
+      <option>EN</option>
+      <option>Հայերեն</option>
+      <option>Русский</option>
+    </select>
+  </div>
+
+  <div class="content">
+    <div class="logo">VERDE CASINO</div>
+    <h1>IT'S TIME FOR SOME MAGIC</h1>
+    <h2>TRY TO GET AMAZING BONUSES</h2>
+
+    <div class="cauldrons">
+      <div class="cauldron">
+        <div class="glow"></div>
+        <div class="label">135% + 40 FS</div>
+      </div>
+      <div class="cauldron" style="animation-delay:1s;">
+        <div class="glow"></div>
+        <div class="label">200 Free Spins</div>
+      </div>
+      <div class="cauldron" style="animation-delay:2s;">
+        <div class="glow"></div>
+        <div class="label">Mystery Bonus</div>
+      </div>
     </div>
 
-    <div class="balance-box">Total Win: <span id="balance">CA$0</span></div>
+    <a href="https://verde.casino/?ref=ka8as_nwujnic_sa8qes" class="btn" target="_blank">
+      ՄԻԱՑԻՐ ՀԻՄԱ & ՍՏԱՑԻՐ ԲՈՆՈՒՍՆԵՐ!
+    </a>
 
-    <button id="spinBtn" class="spin-btn" onclick="spinWheel()">TAP TO SPIN</button>
+    <p style="font-size:1.3rem; opacity:0.9; margin-top:2em;">
+      18+ | Խաղա պատասխանատու | Curacao Licensed
+    </p>
+  </div>
 
-    <div class="disclaimer">18+ | Play Responsibly | Canada Only</div>
-</div>
-
-<div id="endCard" class="overlay">
-    <h1>JACKPOT!</h1>
-    <h2 id="finalPrize">CA$1,000 + 300 FREE SPINS</h2>
-    <button class="spin-btn" onclick="ctaClick()">PLAY NOW</button>
-</div>
-
-<!-- Sounds -->
-<audio id="spinSound" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
-<audio id="jackpotSound" src="https://assets.mixkit.co/active_storage/sfx/2769/2769-preview.mp3"></audio>
-
-<script>
-const canvas=document.getElementById('wheel');
-const ctx=canvas.getContext('2d');
-const prizes=["CA$200","LOSE","CA$800","JOKER","300 FS","BONUS","CA$50","FREE"];
-const colors=["#ff0000","#000","#cc0000","#333","#ff0000","#000","#cc0000","#333"];
-
-let spinCount=0;
-let totalWin=0;
-let currentRotation=0;
-
-function drawWheel(){
-    const slice=(2*Math.PI)/prizes.length;
-    for(let i=0;i<prizes.length;i++){
-        ctx.beginPath();
-        ctx.fillStyle=colors[i];
-        ctx.moveTo(200,200);
-        ctx.arc(200,200,200,i*slice,(i+1)*slice);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(200,200);
-        ctx.rotate(i*slice + slice/2);
-        ctx.fillStyle="#fff";
-        ctx.font="bold 20px Arial";
-        ctx.fillText(prizes[i], 80,10);
-        ctx.restore();
-    }
-}
-
-function animateCounter(start,end){
-    let current=start;
-    const step=Math.ceil((end-start)/40);
-    const interval=setInterval(()=>{
-        current+=step;
-        if(current>=end){
-            current=end;
-            clearInterval(interval);
-            document.body.classList.add('flash');
-            setTimeout(()=>document.body.classList.remove('flash'),300);
-        }
-        document.getElementById('balance').innerText=`CA$${current}`;
-    },30);
-}
-
-function spawnMoney(power){
-    const count=Math.min(150,power/5);
-    for(let i=0;i<count;i++){
-        const el=document.createElement('div');
-        el.className="money";
-        el.innerText="💰";
-        el.style.left=Math.random()*100+"%";
-        el.style.fontSize=(Math.random()*25+15)+"px";
-        el.style.animationDuration=(Math.random()*1.5+1)+"s";
-        el.style.color= i%2===0 ? "#ffd700" : "#00ff99";
-        el.style.textShadow="0 0 10px gold";
-        document.body.appendChild(el);
-        setTimeout(()=>el.remove(),2000);
-    }
-}
-
-function spinWheel(){
-    const btn=document.getElementById('spinBtn');
-    const spinSound=document.getElementById('spinSound');
-    const winSound=document.getElementById('winSound');
-    const jackpotSound=document.getElementById('jackpotSound');
-
-    btn.disabled=true;
-    spinCount++;
-
-    spinSound.currentTime=0;
-    spinSound.play();
-
-    let target=0;
-    if(spinCount===1) target=3600;
-    else if(spinCount===2) target=7200+270;
-    else if(spinCount===3) target=10800+180;
-
-    currentRotation=target;
-    canvas.style.transform=`rotate(${currentRotation}deg)`;
-
-    setTimeout(()=>{
-        if(spinCount===1){
-            animateCounter(totalWin,totalWin+200);
-            totalWin+=200;
-            spawnMoney(400);
-            winSound.play();
-            btn.disabled=false;
-        }
-        else if(spinCount===2){
-            animateCounter(totalWin,totalWin+800);
-            totalWin+=800;
-            spawnMoney(800);
-            winSound.play();
-            btn.disabled=false;
-        }
-        else if(spinCount===3){
-            spawnMoney(3000);
-            jackpotSound.play();
-            document.getElementById('endCard').style.display="flex";
-        }
-    },4000);
-}
-
-function ctaClick(){
-    window.open("https://your-tracking-link.com","_blank");
-}
-
-drawWheel();
-</script>
+  <div class="bats bat1">🦇</div>
+  <div class="bats bat2">🦇</div>
+  <div class="pumpkin pumpkin1">🎃</div>
+  <div class="pumpkin pumpkin2">🎃</div>
 
 </body>
 </html>
