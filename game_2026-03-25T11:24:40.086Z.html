@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Wheel Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #wheel {
+            border: 16px solid #4CAF50;
+            border-radius: 50%;
+            width: 300px;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            transform: rotate(0deg);
+            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #FFA500;
+            border-left: 4px solid #fff;
+            border-top: 4px solid #fff;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            transform-origin: 100% 100%;
+        }
+        .sector:nth-child(1) { transform: rotate(0deg); }
+        .sector:nth-child(2) { transform: rotate(45deg); }
+        .sector:nth-child(3) { transform: rotate(90deg); }
+        .sector:nth-child(4) { transform: rotate(135deg); }
+        .sector:nth-child(5) { transform: rotate(180deg); }
+        .sector:nth-child(6) { transform: rotate(225deg); }
+        .sector:nth-child(7) { transform: rotate(270deg); }
+        .sector:nth-child(8) { transform: rotate(315deg); }
+        #spinButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #spinButton:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="wheel">
+        <div class="sector" style="background-color: #FF5733;">$100</div>
+        <div class="sector" style="background-color: #C70039;">$200</div>
+        <div class="sector" style="background-color: #FFC300;">$300</div>
+        <div class="sector" style="background-color: #DAF7A6;">$400</div>
+        <div class="sector" style="background-color: #581845;">$500</div>
+        <div class="sector" style="background-color: #900C3F;">$600</div>
+        <div class="sector" style="background-color: #3B1F1F;">$700</div>
+        <div class="sector" style="background-color: #1C1C1C;">$800</div>
+    </div>
+    <button id="spinButton">Spin</button>
+    <script>
+        const wheel = document.getElementById('wheel');
+        const spinButton = document.getElementById('spinButton');
+        
+        spinButton.addEventListener('click', () => {
+            const randomDegree = Math.floor(Math.random() * 360) + 3600; // Extra spins
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            spinButton.disabled = true;
+
+            setTimeout(() => {
+                const finalDegree = randomDegree % 360;
+                let prizeIndex = Math.floor((finalDegree / 360) * 8);
+                prizeIndex = (8 - prizeIndex) % 8; // Getting the winning sector
+                alert(`Congratulations! You won ${document.querySelectorAll('.sector')[prizeIndex].textContent}`);
+                spinButton.disabled = false;
+            }, 4000); // Match transition duration
+        });
+    </script>
+</body>
+</html>
