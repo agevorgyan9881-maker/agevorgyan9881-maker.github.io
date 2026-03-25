@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Wheel Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 10px solid #333;
+            overflow: hidden;
+        }
+        .wheel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-origin: center;
+            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: #ffcc00;
+            clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
+            transform-origin: 100% 100%;
+        }
+        .sector:nth-child(1) { background-color: #ff5733; transform: rotate(0deg); }
+        .sector:nth-child(2) { background-color: #33ff57; transform: rotate(45deg); }
+        .sector:nth-child(3) { background-color: #3357ff; transform: rotate(90deg); }
+        .sector:nth-child(4) { background-color: #ff33a1; transform: rotate(135deg); }
+        .sector:nth-child(5) { background-color: #ffff33; transform: rotate(180deg); }
+        .sector:nth-child(6) { background-color: #33ffff; transform: rotate(225deg); }
+        .sector:nth-child(7) { background-color: #a133ff; transform: rotate(270deg); }
+        .sector:nth-child(8) { background-color: #ff33b5; transform: rotate(315deg); }
+        #spin-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <div class="wheel" id="wheel">
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+            <div class="sector"></div>
+        </div>
+    </div>
+    <button id="spin-button">Spin</button>
+    <div id="result"></div>
+    <script>
+        const wheel = document.getElementById('wheel');
+        const result = document.getElementById('result');
+        const button = document.getElementById('spin-button');
+        const prizes = ['$100', '$200', '$50', '$300', 'Car', 'Trip', 'Gift Card', 'Bike'];
+
+        button.addEventListener('click', () => {
+            const randomDegrees = Math.floor(Math.random() * 360 + 720);  // Spin at least 2 rotations
+            wheel.style.transform = `rotate(${randomDegrees}deg)`;
+
+            setTimeout(() => {
+                const normalizedDegrees = randomDegrees % 360;
+                const selectedIndex = Math.floor(normalizedDegrees / (360 / prizes.length));
+                result.textContent = `You won: ${prizes[selectedIndex]}`;
+            }, 4000); // Ensure this matches the CSS transition duration
+        });
+    </script>
+</body>
+</html>
