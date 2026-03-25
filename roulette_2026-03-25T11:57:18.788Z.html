@@ -1,0 +1,185 @@
+Creating a complete HTML5 Roulette casino game involves HTML for structure, CSS for styling, and JavaScript for interactivity. Below is a basic implementation that covers all the requirements specified. This won't be a production-level code but will give you a solid starting point. 
+
+Here's how you can structure it:
+
+### HTML (index.html)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="casino">
+        <div class="roulette-wheel" id="wheel">
+            <div class="ball" id="ball"></div>
+        </div>
+        <div class="betting-table">
+            <div class="bet-area" data-bet="0">0</div>
+            <!-- Add numbered boxes -->
+            <!-- ... -->
+            <div class="bet-area" data-bet="36">36</div>
+            <div class="color-area red" data-bet="red">Red</div>
+            <div class="color-area black" data-bet="black">Black</div>
+            <!-- Add other areas like Even, Odd etc. -->
+            <button id="spin">Spin</button>
+            <button id="clear">Clear Bets</button>
+            <div id="message"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+### CSS (styles.css)
+
+```css
+body {
+    background-color: #2c3e50;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+.casino {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.roulette-wheel {
+    width: 300px;
+    height: 300px;
+    border: 10px solid #8e44ad;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.ball {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 140px; /* center the ball vertically */
+    left: 140px; /* center the ball horizontally */
+    transition: all 5s ease;
+}
+
+.betting-table {
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    background-color: #27ae60;
+    padding: 10px;
+}
+
+.bet-area {
+    width: 20px; /* width for 1-36 numbers */
+    height: 40px;
+    border: 1px solid #fff;
+    display: inline-block;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.color-area {
+    width: 60px; 
+    height: 40px; 
+    cursor: pointer; 
+}
+
+.red {
+    background-color: red;
+}
+
+.black {
+    background-color: black;
+}
+
+button {
+    margin: 10px;
+    padding: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+```
+
+### JavaScript (script.js)
+
+```javascript
+let bets = [];
+const results = document.getElementById("message");
+const ball = document.getElementById("ball");
+const spinButton = document.getElementById("spin");
+const clearButton = document.getElementById("clear");
+
+document.querySelectorAll('.bet-area, .color-area').forEach(area => {
+    area.addEventListener('click', function() {
+        let betValue = this.getAttribute('data-bet');
+        if (bets.includes(betValue)) {
+            bets = bets.filter(bet => bet !== betValue);
+            this.style.backgroundColor = ""; // Reset color on deselect
+        } else {
+            bets.push(betValue);
+            this.style.backgroundColor = "yellow"; // Highlight when selected
+        }
+        results.textContent = `Current Bets: ${bets.join(', ')}`;
+    });
+});
+
+spinButton.addEventListener('click', function() {
+    if (bets.length === 0) {
+        alert("Please place your bets first.");
+        return;
+    }
+
+    // Simulate ball spin
+    let spinResult = Math.floor(Math.random() * 37); // Get a number between 0 and 36
+    let spinColor = spinResult === 0 ? 'green' : (spinResult % 2 === 0 ? 'red' : 'black'); 
+    ball.style.transform = `rotate(${Math.random() * 360}deg)`;
+    
+    setTimeout(() => {
+        ball.style.transform = `rotate(${spinResult * 10}deg)`;
+        setTimeout(() => {
+            calculateResult(spinResult, spinColor);
+        }, 1500);
+    }, 100);
+});
+
+clearButton.addEventListener('click', function() {
+    bets = [];
+    results.textContent = "Current Bets: None";
+    document.querySelectorAll('.bet-area').forEach(area => area.style.backgroundColor = "");
+});
+
+function calculateResult(spinResult, spinColor) {
+    results.textContent += ` | Spin Result: ${spinResult}, Color: ${spinColor}`;
+    if (bets.includes("" + spinResult) || bets.includes(spinColor)) {
+        results.textContent += " - You Win!";
+    } else {
+        results.textContent += " - You Lose!";
+    }
+}
+```
+
+### Explanation
+1. **HTML Structure**: Defines sections for the Roulette wheel and betting table. Each betting area is clickable.
+2. **Styling**: Uses rich colors for a casino-like atmosphere. The betting areas are interactive and visually distinct.
+3. **JavaScript Logic**:
+   - Listens for clicks on betting areas to place or remove bets.
+   - Spins the wheel randomly and checks the result against user bets.
+   - Displays outcomes, allowing users to clear their bets.
+
+### Important Notes
+- This implementation is basic and for educational purposes. It lacks full functionality (like additional bet types, winning logic for unique bet types), but it provides a framework you can build upon and enhance.
+- You can also use libraries like p5.js for enhanced graphics or layout customization.
+- Make sure to test in a suitable local development environment or on a web server to handle JavaScript correctly.
