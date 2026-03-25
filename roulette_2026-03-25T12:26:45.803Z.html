@@ -1,0 +1,295 @@
+Creating a complete HTML5 Roulette casino game involves using HTML, CSS, and JavaScript to build the interactivity and visual components you described. Below, you'll find a simplified version that incorporates the essential components: a betting table, a roulette wheel, and basic game logic. 
+
+This code provides a starting point that you can further customize and enhance for a more complex game.
+
+### HTML Structure
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="casino">
+        <div class="roulette-table">
+            <h1>French Roulette</h1>
+            <div class="betting-table" id="betting-table">
+                <!-- Betting area -->
+                <div class="numbers">
+                    <!-- Number betting boxes -->
+                    <div class="bet-box" data-bet="1">1</div>
+                    <div class="bet-box" data-bet="2">2</div>
+                    <div class="bet-box" data-bet="3">3</div>
+                    <div class="bet-box" data-bet="4">4</div>
+                    <div class="bet-box" data-bet="5">5</div>
+                    <div class="bet-box" data-bet="6">6</div>
+                    <div class="bet-box" data-bet="7">7</div>
+                    <div class="bet-box" data-bet="8">8</div>
+                    <div class="bet-box" data-bet="9">9</div>
+                    <div class="bet-box" data-bet="10">10</div>
+                    <div class="bet-box" data-bet="11">11</div>
+                    <div class="bet-box" data-bet="12">12</div>
+                    <div class="bet-box" data-bet="13">13</div>
+                    <div class="bet-box" data-bet="14">14</div>
+                    <div class="bet-box" data-bet="15">15</div>
+                    <div class="bet-box" data-bet="16">16</div>
+                    <div class="bet-box" data-bet="17">17</div>
+                    <div class="bet-box" data-bet="18">18</div>
+                    <div class="bet-box" data-bet="19">19</div>
+                    <div class="bet-box" data-bet="20">20</div>
+                    <div class="bet-box" data-bet="21">21</div>
+                    <div class="bet-box" data-bet="22">22</div>
+                    <div class="bet-box" data-bet="23">23</div>
+                    <div class="bet-box" data-bet="24">24</div>
+                    <div class="bet-box" data-bet="25">25</div>
+                    <div class="bet-box" data-bet="26">26</div>
+                    <div class="bet-box" data-bet="27">27</div>
+                    <div class="bet-box" data-bet="28">28</div>
+                    <div class="bet-box" data-bet="29">29</div>
+                    <div class="bet-box" data-bet="30">30</div>
+                    <div class="bet-box" data-bet="31">31</div>
+                    <div class="bet-box" data-bet="32">32</div>
+                    <div class="bet-box" data-bet="33">33</div>
+                    <div class="bet-box" data-bet="34">34</div>
+                    <div class="bet-box" data-bet="35">35</div>
+                    <div class="bet-box" data-bet="36">36</div>
+                </div>
+                <div class="outside-bets">
+                    <div class="bet-area" data-bet="red">Red</div>
+                    <div class="bet-area" data-bet="black">Black</div>
+                    <div class="bet-area" data-bet="even">Even</div>
+                    <div class="bet-area" data-bet="odd">Odd</div>
+                    <div class="bet-area" data-bet="low">1-18</div>
+                    <div class="bet-area" data-bet="high">19-36</div>
+                    <div class="bet-area" data-bet="1st12">1st 12</div>
+                    <div class="bet-area" data-bet="2nd12">2nd 12</div>
+                    <div class="bet-area" data-bet="3rd12">3rd 12</div>
+                    <div class="bet-area" data-bet="column1"></div>
+                    <div class="bet-area" data-bet="column2"></div>
+                    <div class="bet-area" data-bet="column3"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="spin-button">Spin</button>
+                <button id="clear-button">Clear Bets</button>
+                <div id="message"></div>
+            </div>
+        </div>
+        <div class="roulette-wheel">
+            <div class="wheel" id="roulette-wheel">
+                <!-- Simulating a simple wheel -->
+                <div class="ball" id="ball"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+### CSS Styles
+
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2e2e2e;
+    color: white;
+}
+
+.casino {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.roulette-table {
+    flex: 0 0 60%;
+    background-color: #3b7634;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: gold;
+}
+
+.betting-table {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(3, 50px);
+}
+
+.numbers {
+    grid-column: span 10;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.bet-box, .bet-area {
+    border: 1px solid #ffffff;
+    background-color: #444;
+    margin: 2px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.bet-box:hover, .bet-area:hover {
+    background-color: #555;
+}
+
+.controls {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.roulette-wheel {
+    flex: 0 0 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wheel {
+    width: 200px;
+    height: 200px;
+    border: 16px solid #ddd;
+    border-radius: 50%;
+    background: linear-gradient(to right, #6a0dad, #8a2be2);
+    position: relative;
+    overflow: hidden;
+}
+
+.ball {
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 12px;
+    left: 92%;
+    transition: all 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+```
+
+### JavaScript Logic
+
+```javascript
+const betBoxes = document.querySelectorAll('.bet-box');
+const outsideBets = document.querySelectorAll('.bet-area');
+const spinButton = document.getElementById('spin-button');
+const clearButton = document.getElementById('clear-button');
+const messageDisplay = document.getElementById('message');
+const wheel = document.getElementById('roulette-wheel');
+const ball = document.getElementById('ball');
+
+let userBets = [];
+let betAmount = 10; // fixed bet amount for simplicity
+
+betBoxes.forEach(box => {
+    box.addEventListener('click', () => placeBet(parseInt(box.getAttribute('data-bet'))));
+});
+
+outsideBets.forEach(area => {
+    area.addEventListener('click', () => placeBet(area.getAttribute('data-bet')));
+});
+
+spinButton.addEventListener('click', spinWheel);
+clearButton.addEventListener('click', clearBets);
+
+function placeBet(bet) {
+    if (!userBets.includes(bet)) {
+        userBets.push(bet);
+        messageDisplay.innerHTML = `Bet placed on: ${bet}`;
+    }
+}
+
+function spinWheel() {
+    if (userBets.length === 0) {
+        messageDisplay.innerHTML = 'Please place a bet before spinning!';
+        return;
+    }
+    
+    const winningNumber = Math.floor(Math.random() * 37);
+    const winningColor = winningNumber === 0 ? 'green' : (winningNumber % 2 === 0 ? 'red' : 'black');
+    
+    // Spin Logic
+    ball.style.transition = 'none';
+    ball.style.transform = 'rotate(0deg)';
+    setTimeout(() => {
+        const spinDirection = Math.floor(Math.random() * 360) + (360 * 3); // spin + 3 rounds
+        ball.style.transition = 'all 3s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        ball.style.transform = `rotate(${spinDirection}deg)`;
+        
+        // Determine winning outcome
+        setTimeout(() => {
+            calculateWinnings(winningNumber, winningColor);
+        }, 3000);
+    }, 100);
+}
+
+function calculateWinnings(winningNumber, winningColor) {
+    let wins = 0;
+
+    userBets.forEach(bet => {
+        if (Number.isInteger(bet) && bet === winningNumber) {
+            wins += betAmount * 35; // Number bet payout
+        } else if (bet === 'red' && winningColor === 'red') {
+            wins += betAmount; // Red bet payout
+        } else if (bet === 'black' && winningColor === 'black') {
+            wins += betAmount; // Black bet payout
+        } else if (bet === 'even' && winningNumber % 2 === 0) {
+            wins += betAmount; // Even bet payout
+        } else if (bet === 'odd' && winningNumber % 2 !== 0) {
+            wins += betAmount; // Odd bet payout
+        } else if (bet === 'low' && winningNumber >= 1 && winningNumber <= 18) {
+            wins += betAmount; // Low bet payout
+        } else if (bet === 'high' && winningNumber >= 19 && winningNumber <= 36) {
+            wins += betAmount; // High bet payout
+        } else if (bet === '1st12' && winningNumber >= 1 && winningNumber <= 12) {
+            wins += betAmount; // First 12 payout
+        } else if (bet === '2nd12' && winningNumber >= 13 && winningNumber <= 24) {
+            wins += betAmount; // Second 12 payout
+        } else if (bet === '3rd12' && winningNumber >= 25 && winningNumber <= 36) {
+            wins += betAmount; // Third 12 payout
+        }
+    });
+
+    messageDisplay.innerHTML = `Winning number: ${winningNumber} (${winningColor}). You won: $${wins}!`;
+    userBets = []; // Clear bets after the round
+}
+
+function clearBets() {
+    userBets = [];
+    messageDisplay.innerHTML = 'Bets cleared. Place a new bet.';
+}
+```
+
+### Brief Explanation of Components
+
+1. **HTML Structure**: The HTML defines the layout with a betting table and a wheel. Each number, color, and betting area is clickable.
+
+2. **CSS Styles**: The CSS applies a luxurious casino theme with rich colors and interactive styling for the buttons and betting areas.
+
+3. **JavaScript Logic**: The JavaScript contains:
+   - Event listeners for user interaction.
+   - Logic to handle placing bets and spinning the wheel.
+   - Randomly determining a winning number and calculating winnings.
+   - A clear bet function.
+
+### Conclusion
+
+This code provides a functional starting point for your Roulette game in HTML5. You can expand upon this base by adding more features, enhancing graphics, and refining the betting system. Consider also adding sound effects for a more immersive experience.
