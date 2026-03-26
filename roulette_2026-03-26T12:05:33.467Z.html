@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        #roulette-wheel {
+            width: 300px;
+            height: 300px;
+            border: 10px solid gold;
+            border-radius: 50%;
+            background: linear-gradient(to top, green 20%, darkgreen 20%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .number {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            border: 2px solid gold;
+            border-radius: 5px;
+        }
+        .spin-button {
+            margin: 20px;
+            padding: 15px 30px;
+            background-color: gold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .spin-button:hover {
+            background-color: #ffd700;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #winner-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid gold;
+            z-index: 10;
+            color: gold;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="winner-popup">
+        <h2>Congratulations!</h2>
+        <p>You are a winner!</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <div id="roulette-wheel"></div>
+    <button class="spin-button" onclick="spinWheel()">Spin the Wheel</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
+    <script>
+        function createNumbers() {
+            const wheelDiv = document.getElementById('roulette-wheel');
+            const colors = ['red', 'black', 'green'];
+
+            for (let i = 0; i < 36; i++) {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'number';
+                numberDiv.style.transform = `rotate(${i * 10}deg) translateY(-50%)`;
+                numberDiv.style.color = colors[i % 3]; // Simple color mapping
+                numberDiv.innerHTML = (i + 1).toString();
+                wheelDiv.appendChild(numberDiv);
+            }
+        }
+
+        createNumbers();
+
+        function spinWheel() {
+            const wheel = document.getElementById('roulette-wheel');
+            const randomDegree = Math.floor(Math.random() * 360 + 720); // Spin at least 2 rounds
+            wheel.style.transition = 'transform 4s cubic-bezier(0.05, 0.8, 0.2, 1)';
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            playSound();
+            setTimeout(() => {
+                showWinnerPopup();
+                confetti({});
+            }, 4000);
+        }
+
+        function playSound() {
+            const audio = new Audio('https://www.soundjay.com/button/sounds/button-16.mp3');
+            audio.play();
+        }
+
+        function showWinnerPopup() {
+            document.getElementById('winner-popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('winner-popup').style.display = 'none';
+            const wheel = document.getElementById('roulette-wheel');
+            wheel.style.transition = '';
+            wheel.style.transform = 'rotate(0deg)';
+        }
+    </script>
+</body>
+</html>
