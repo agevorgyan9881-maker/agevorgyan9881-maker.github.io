@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Roulette</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #e0d4b0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #roulette-table {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .betting-chips {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        .chip-10 { background-color: green; color: white; }
+        .chip-25 { background-color: blue; color: white; }
+        .chip-50 { background-color: orange; color: white; }
+        .chip-100 { background-color: red; color: white; }
+        #spin-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: gold;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #spin-button:hover {
+            background-color: darkgoldenrod;
+        }
+        #bank-balance {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="roulette-table">
+        <canvas id="wheel" width="600" height="600"></canvas>
+    </div>
+    <div class="betting-chips">
+        <div class="chip chip-10" data-value="10">10</div>
+        <div class="chip chip-25" data-value="25">25</div>
+        <div class="chip chip-50" data-value="50">50</div>
+        <div class="chip chip-100" data-value="100">100</div>
+    </div>
+    <button id="spin-button">Spin</button>
+    <div id="bank-balance">Balance: $1000</div>
+    
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinButton = document.getElementById('spin-button');
+        const bankBalanceDisplay = document.getElementById('bank-balance');
+        let bankBalance = 1000;
+        let chosenBet = 0;
+        const colors = ['#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000', '#FF0000', '#000000'];
+        const numbers = Array.from({length: 36}, (_, i) => i + 1).concat("0");
+        
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 37; i++) {
+                const angle = (2 * Math.PI / 37) * i;
+                ctx.beginPath();
+                ctx.moveTo(300, 300);
+                ctx.arc(300, 300, 280, angle, angle + (2 * Math.PI / 37));
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.stroke();
+                ctx.save();
+                ctx.translate(300, 300);
+                ctx.rotate(angle + (Math.PI / 37));
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fillText(numbers[i], 230, 10);
+                ctx.restore();
+            }
+        }
+
+        function spin() {
+            const rotation = Math.floor(Math.random() * 360) + 720; // Full spins + random degree
+            canvas.style.transition = 'transform 4s ease-out';
+            canvas.style.transform = `rotate(${rotation}deg)`;
+            
+            setTimeout(() => {
+                const winningNumber = Math.floor((rotation % 360) / (360 / 37));
+                const number = numbers[winningNumber];
+                const color = colors[winningNumber];
+                alert(`Winning Number: ${number} - ${color}`);
+                bankBalance += chosenBet * (color === '#FF0000' ? 2 : -1); // Simple win/loss logic
+                chosenBet = 0;
+                bankBalanceDisplay.innerText = `Balance: $${bankBalance}`;
+                drawWheel(); // Redraw the wheel at the end
+                canvas.style.transition = '';
+                canvas.style.transform = '';
+            }, 4000);
+        }
+
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                chosenBet = parseInt(chip.getAttribute('data-value'));
+                bankBalance -= chosenBet;
+                bankBalanceDisplay.innerText = `Balance: $${bankBalance}`;
+            });
+        });
+
+        spinButton.addEventListener('click', () => {
+            if (chosenBet > 0) {
+                spin();
+            } else {
+                alert('Place a bet first!');
+            }
+        });
+
+        drawWheel(); // Initial draw
+    </script>
+</body>
+</html>
