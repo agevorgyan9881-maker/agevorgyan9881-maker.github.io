@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette - Spin to Win</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px gold;
+        }
+        .roulette-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 10px solid gold;
+            border-radius: 50%;
+            overflow: hidden;
+            background: radial-gradient(circle, #004d00 40%, #1a1a1a 70%);
+            animation: glow 1.5s infinite alternate;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px gold; }
+            100% { box-shadow: 0 0 40px gold; }
+        }
+        .wheel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/7CLpGNc.png') no-repeat center/cover;
+            transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        .spin-button {
+            padding: 10px 25px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: gold;
+            color: #1a1a1a;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px gold;
+            transition: background 0.3s ease;
+        }
+        .spin-button:hover {
+            background-color: darkgoldenrod;
+        }
+        .winner-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px gold;
+            z-index: 1000;
+        }
+        .winner-popup h2 {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Spin the Roulette Wheel!</h1>
+    <div class="roulette-container">
+        <div class="wheel" id="rouletteWheel"></div>
+    </div>
+    <button class="spin-button" id="spinButton">Spin!</button>
+
+    <div class="winner-popup" id="winnerPopup">
+        <h2>You Won!</h2>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const spinButton = document.getElementById('spinButton');
+        const wheel = document.getElementById('rouletteWheel');
+        const winnerPopup = document.getElementById('winnerPopup');
+
+        spinButton.addEventListener('click', () => {
+            const randomRotation = Math.floor(Math.random() * 360 + 720); // Spins at least 2 full rotations
+            wheel.style.transform = `rotate(${randomRotation}deg)`;
+            playSound();
+
+            setTimeout(() => {
+                showWinnerPopup();
+                launchConfetti();
+            }, 4000); // Matches wheel spin duration
+        });
+
+        function playSound() {
+            const audio = new Audio('https://www.soundjay.com/button/sounds/button-1.mp3');
+            audio.play();
+        }
+
+        function showWinnerPopup() {
+            winnerPopup.style.display = 'block';
+        }
+
+        function closePopup() {
+            winnerPopup.style.display = 'none';
+        }
+
+        function launchConfetti() {
+            confetti();
+        }
+    </script>
+</body>
+</html>
