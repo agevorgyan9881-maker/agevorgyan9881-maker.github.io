@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Jackpot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: gold;
+        }
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border: 16px solid gold;
+            border-radius: 50%;
+            background: radial-gradient(circle, #007a33, #004d1a);
+            position: relative;
+            transition: transform 4s ease-out;
+        }
+        .spin-button {
+            margin-top: 20px;
+            background-color: gold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+        .spin-button:hover {
+            background-color: #ffd700;
+        }
+        @keyframes confetti {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spin to Win!</h1>
+        <div class="wheel" id="rouletteWheel"></div>
+        <button class="spin-button" id="spinButton"><i class="fas fa-sync-alt"></i> Spin Now!</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.4.0/confetti.browser.min.js"></script>
+    <script>
+        const spinButton = document.getElementById('spinButton');
+        const rouletteWheel = document.getElementById('rouletteWheel');
+
+        spinButton.addEventListener('click', () => {
+            playSpinSound();
+            const randomDeg = Math.floor(Math.random() * 360) + 3600; // Spin for multiple rounds
+            rouletteWheel.style.transform = `rotate(${randomDeg}deg)`;
+            setTimeout(showWinnerPopup, 4000);
+        });
+
+        function showWinnerPopup() {
+            // Trigger confetti animation
+            confetti();
+            alert('Congratulations! You Won!');
+        }
+
+        function playSpinSound() {
+            const audio = new Audio('data:audio/wav;base64,UklGRvgAAABXQVZFZm10IBAAAAABAAEAIAAAABAAEAAABAAACAAAAAAACHzDwYAAAAA=='); // Simulated click sound
+            audio.play();
+        }
+    </script>
+</body>
+</html>
